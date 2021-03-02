@@ -1,4 +1,4 @@
-package Mastermind.core;
+package sk.tuke.kpi.kp.mastermind.core;
 
 public enum PinColor {
     RED,
@@ -8,5 +8,6 @@ public enum PinColor {
     PINK,
     BROWN,
     BLACK,
-    WHITE
+    WHITE,
+    EMPTY
 }
