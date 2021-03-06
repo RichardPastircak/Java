@@ -1,7 +1,7 @@
 package sk.tuke.kpi.kp.mastermind.core;
 
 public class Hole {
-    private Pin pin;
+    private final Pin pin;
 
     public Hole() {
         pin = new Pin(PinColor.EMPTY);
@@ -9,9 +9,5 @@ public class Hole {
 
     public Pin getPin() {
         return pin;
-    }
-
-    public void setPin(Pin pin) {
-        this.pin = pin;
     }
 }
