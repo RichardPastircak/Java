@@ -20,36 +20,79 @@ public class Game {
         history = new Hole[9][8];
         round = 0;
 
+        fillUpHoles();
+        generateCombination();
+    }
 
-        Random rand = new Random();
+                                        /* Getters and Setters*/
+
+    public static Game getGame() {
+        return game;
+    }
+
+    public Hole[] getCombination() {
+        return combination;
+    }
+
+    public Hole[] getPlayerHole() {
+        return playerHole;
+    }
+
+    public Hole[] getEvaluationHole() {
+        return evaluationHole;
+    }
+
+    public Hole[][] getHistory() {
+        return history;
+    }
+
+    /*Other functions*/
+    public void fillUpHoles(){
         for (int i = 0; i < 4; i++){
-            int tmp = rand.nextInt(6);
-            switch (tmp){
-                case 0: combination[i].getPin().setColor(PinColor.RED);
-                        break;
-                case 1: combination[i].getPin().setColor(PinColor.BLUE);
-                    break;
-                case 2: combination[i].getPin().setColor(PinColor.GREEN);
-                    break;
-                case 3: combination[i].getPin().setColor(PinColor.YELLOW);
-                    break;
-                case 4: combination[i].getPin().setColor(PinColor.PINK);
-                    break;
-                case 5: combination[i].getPin().setColor(PinColor.BROWN);
-                    break;
-                default: break;
+            playerHole[i] = new Hole();
+            evaluationHole[i] = new Hole();
+            combination[i] = new Hole();
+        }
+
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 8; j++){
+                history[i][j] = new Hole();
             }
         }
     }
 
-                                        /* Getters and Setters*/
-    public static Game getGame() {
-        return game;
+    //generate random combination
+    public void generateCombination() {
+        Random rand = new Random();
+        for (int i = 0; i < 4; i++) {
+            int tmp = rand.nextInt(6);
+            switch (tmp) {
+                case 0:
+                    combination[i].getPin().setColor(PinColor.RED);
+                    break;
+                case 1:
+                    combination[i].getPin().setColor(PinColor.BLUE);
+                    break;
+                case 2:
+                    combination[i].getPin().setColor(PinColor.GREEN);
+                    break;
+                case 3:
+                    combination[i].getPin().setColor(PinColor.YELLOW);
+                    break;
+                case 4:
+                    combination[i].getPin().setColor(PinColor.PINK);
+                    break;
+                case 5:
+                    combination[i].getPin().setColor(PinColor.BROWN);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
-                                        /*Other functions*/
 
     //Reset round by setting up player's and evaluation's holes with empty pins
-    public void generate(){
+    public void reset(){
         for (int i = 0; i < 4; i++){
             playerHole[i].getPin().setColor(PinColor.EMPTY);
             evaluationHole[i].getPin().setColor(PinColor.EMPTY);
