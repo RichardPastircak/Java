@@ -1,7 +1,9 @@
 package sk.tuke.kpi.kp.mastermind;
 
+import sk.tuke.kpi.kp.mastermind.consoleui.Console;
+
 public class Mastermind {
     public static void main(String[] args) {
-        System.out.println("Successful creation.\n");
+        Console.getConsole().play();
     }
 }

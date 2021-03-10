@@ -14,8 +14,8 @@ public class GameTest {
         Game.getGame().fillUpHoles();
         for(int i = 0; i < 4; i++){
             assertTrue(Game.getGame().getCombination()[i].getPin().getColor() == PinColor.EMPTY);
-            assertTrue(Game.getGame().getEvaluationHole()[i].getPin().getColor() == PinColor.EMPTY);
-            assertTrue(Game.getGame().getPlayerHole()[i].getPin().getColor() == PinColor.EMPTY);
+            assertTrue(Game.getGame().getEvaluationHoles()[i].getPin().getColor() == PinColor.EMPTY);
+            assertTrue(Game.getGame().getPlayerHoles()[i].getPin().getColor() == PinColor.EMPTY);
         }
 
         for(int i =0; i < 9; i++){
@@ -31,7 +31,10 @@ public class GameTest {
         Game.getGame().generateCombination();
 
         for (int i = 0; i < 4; i++){
-            assertTrue(Game.getGame().getCombination()[i].getPin().getColor() != PinColor.EMPTY && Game.getGame().getCombination()[i].getPin().getColor() != PinColor.BLACK && Game.getGame().getCombination()[i].getPin().getColor() != PinColor.WHITE);
+            assertTrue(Game.getGame().getCombination()[i].getPin().getColor() != PinColor.EMPTY && Game.getGame().getCombination()[i].getPin().getColor() != PinColor.BLACK && Game.getGame().getCombination()[i].getPin().getColor() != PinColor.GREY);
+            for(int j = i+1; j < 4; j++){
+                assertTrue(Game.getGame().getCombination()[i] != Game.getGame().getCombination()[j]);
+            }
         }
     }
 
@@ -40,14 +43,14 @@ public class GameTest {
         Game.getGame().fillUpHoles();
 
         for(int i = 0; i < 4; i++){
-            Game.getGame().getEvaluationHole()[i].getPin().setColor(PinColor.RED);
-            Game.getGame().getPlayerHole()[i].getPin().setColor(PinColor.RED);
+            Game.getGame().getEvaluationHoles()[i].getPin().setColor(PinColor.RED);
+            Game.getGame().getPlayerHoles()[i].getPin().setColor(PinColor.RED);
         }
 
         Game.getGame().reset();
         for (int i = 0; i < 4; i++) {
-            assertTrue(Game.getGame().getEvaluationHole()[i].getPin().getColor() == PinColor.EMPTY);
-            assertTrue(Game.getGame().getPlayerHole()[i].getPin().getColor() == PinColor.EMPTY);
+            assertTrue(Game.getGame().getEvaluationHoles()[i].getPin().getColor() == PinColor.EMPTY);
+            assertTrue(Game.getGame().getPlayerHoles()[i].getPin().getColor() == PinColor.EMPTY);
         }
     }
 
@@ -55,19 +58,24 @@ public class GameTest {
 
     @Test
     public void testEvaluate(){
-        PinColor[] result = {PinColor.BLACK, PinColor.WHITE, PinColor.WHITE, PinColor.EMPTY};
+        PinColor[] result = {PinColor.BLACK, PinColor.GREY, PinColor.GREY, PinColor.EMPTY};
 
         Game.getGame().fillUpHoles();
-        Game.getGame().generateCombination();
-        Game.getGame().getPlayerHole()[0] = Game.getGame().getCombination()[2];
-        Game.getGame().getPlayerHole()[1] = Game.getGame().getCombination()[1];
-        Game.getGame().getPlayerHole()[2] = Game.getGame().getCombination()[0];
-        Game.getGame().getPlayerHole()[3].getPin().setColor(PinColor.EMPTY);
+        //Game.getGame().generateCombination();
+        Game.getGame().getPlayerHoles()[0].getPin().setColor(PinColor.RED);
+        Game.getGame().getPlayerHoles()[1].getPin().setColor(PinColor.BLUE);
+        Game.getGame().getPlayerHoles()[2].getPin().setColor(PinColor.GREEN);
+        Game.getGame().getPlayerHoles()[3].getPin().setColor(PinColor.YELLOW);
+
+        Game.getGame().getCombination()[0].getPin().setColor(PinColor.GREEN);
+        Game.getGame().getCombination()[1].getPin().setColor(PinColor.BLUE);
+        Game.getGame().getCombination()[2].getPin().setColor(PinColor.RED);
+        Game.getGame().getCombination()[3].getPin().setColor(PinColor.PURPLE);
 
         Game.getGame().evaluate();
 
         for (int i = 0; i < 4; i++){
-            assertTrue(Game.getGame().getEvaluationHole()[i].getPin().getColor() == result[i]);
+            assertTrue(Game.getGame().getEvaluationHoles()[i].getPin().getColor() == result[i]);
         }
     }
 
@@ -95,10 +103,10 @@ public class GameTest {
                    pinColor = PinColor.YELLOW;
                    break;
                case 4:
-                   pinColor = PinColor.PINK;
+                   pinColor = PinColor.PURPLE;
                    break;
                case 5:
-                   pinColor = PinColor.BROWN;
+                   pinColor = PinColor.CYAN;
                    break;
                default:
                    break;
@@ -107,7 +115,7 @@ public class GameTest {
 
         Game.getGame().putPin(pinColor, index);
 
-        assertTrue(Game.getGame().getPlayerHole()[index].getPin().getColor() == pinColor);
+        assertTrue(Game.getGame().getPlayerHoles()[index].getPin().getColor() == pinColor);
     }
 
 }

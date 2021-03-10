@@ -5,9 +5,9 @@ public enum PinColor {
     BLUE,
     GREEN,
     YELLOW,
-    PINK,
-    BROWN,
+    PURPLE,
+    CYAN,
     BLACK,
-    WHITE,
+    GREY,
     EMPTY
 }
