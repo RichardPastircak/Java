@@ -18,7 +18,7 @@ public class Game {
         playerHoles = new Hole[4];
         evaluationHoles = new Hole[4];
         history = new Hole[9][8];
-        round = 0;
+        round = 8;
 
         fillUpHoles();
         generateCombination();
@@ -137,11 +137,6 @@ public class Game {
             }
         }
 
-        if(position_counter == 4) {
-            gameState = GameState.WIN;
-            return;
-        }
-
         //add WHITE PINS
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
@@ -167,6 +162,11 @@ public class Game {
         round++;
         if(round == 9){
             gameState = GameState.LOSE;
+        }
+
+        if(position_counter == 4) {
+            gameState = GameState.WIN;
+            return;
         }
     }
 
