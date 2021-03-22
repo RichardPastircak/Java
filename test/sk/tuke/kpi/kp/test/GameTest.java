@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class GameTest {
     @Test
-    public void testFillingHoles(){
+    public void fillingHolesTest(){
         Game.getGame().fillUpHoles();
         for(int i = 0; i < 4; i++){
             assertTrue(Game.getGame().getCombination()[i].getColor() == Pin.EMPTY);
@@ -26,7 +26,7 @@ public class GameTest {
     }
 
     @Test
-    public void testGenerateCombination(){
+    public void generateCombinationTest(){
         Game.getGame().fillUpHoles();
         Game.getGame().generateCombination();
 
@@ -39,7 +39,7 @@ public class GameTest {
     }
 
     @Test
-    public void testReset(){
+    public void resetTest(){
         Game.getGame().fillUpHoles();
 
         for(int i = 0; i < 4; i++){
@@ -57,7 +57,7 @@ public class GameTest {
 
 
     @Test
-    public void testEvaluate(){
+    public void evaluateTest(){
         Pin[] result = {Pin.BLACK, Pin.GREY, Pin.GREY, Pin.EMPTY};
 
         Game.getGame().fillUpHoles();
@@ -80,7 +80,7 @@ public class GameTest {
     }
 
    @Test
-    public void testPutPin(){
+    public void putPinTest(){
         Game.getGame().fillUpHoles();
         Random rand = new Random();
 

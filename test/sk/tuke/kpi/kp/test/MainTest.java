@@ -7,23 +7,29 @@ public class MainTest {
     @Test
     public void allTest() {
         CommentServiceJDBCTest commentServiceJDBCTest = new CommentServiceJDBCTest();
-        commentServiceJDBCTest.testAddComment();
+        commentServiceJDBCTest.addCommentTest();
+        commentServiceJDBCTest.getCommentsTest();
+        commentServiceJDBCTest.resetTest();
 
         GameTest gameTest = new GameTest();
-        gameTest.testEvaluate();
-        gameTest.testReset();
-        gameTest.testFillingHoles();
-        gameTest.testPutPin();
-        gameTest.testGenerateCombination();
+        gameTest.evaluateTest();
+        gameTest.resetTest();
+        gameTest.fillingHolesTest();
+        gameTest.putPinTest();
+        gameTest.generateCombinationTest();
 
         HoleTest holeTest = new HoleTest();
-        holeTest.testCreateHole();
-        holeTest.testSetColor();
+        holeTest.createHoleTest();
+        holeTest.setColorTest();
 
         RatingServiceJDBCTest ratingServiceJDBCTest = new RatingServiceJDBCTest();
-        ratingServiceJDBCTest.testSetRating();
+        ratingServiceJDBCTest.setRatingTest();
+        ratingServiceJDBCTest.getAverageRatingTest();
+        ratingServiceJDBCTest.resetTest();
 
         ScoreServiceJDBCTest scoreServiceJDBCTest = new ScoreServiceJDBCTest();
-        scoreServiceJDBCTest.testAddScore();
+        scoreServiceJDBCTest.addScoreTest();
+        scoreServiceJDBCTest.getTopScoresTest();
+        scoreServiceJDBCTest.resetTest();
     }
 }
