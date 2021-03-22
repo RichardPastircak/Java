@@ -18,7 +18,7 @@ public class Game {
         playerHoles = new Hole[4];
         evaluationHoles = new Hole[4];
         history = new Hole[9][8];
-        round = 8;
+        round = 0;
 
         fillUpHoles();
         generateCombination();
@@ -71,8 +71,8 @@ public class Game {
 
     //generate random combination
     public void generateCombination() {
-        PinColor[] usedColors = {PinColor.EMPTY, PinColor.EMPTY, PinColor.EMPTY, PinColor.EMPTY};
-        PinColor newColor = PinColor.EMPTY;
+        Pin[] usedColors = {Pin.EMPTY, Pin.EMPTY, Pin.EMPTY, Pin.EMPTY};
+        Pin newColor = Pin.EMPTY;
         Random rand = new Random();
         int i = 0;
 
@@ -80,22 +80,22 @@ public class Game {
             int tmp = rand.nextInt(6);
             switch (tmp) {
                 case 0:
-                    newColor = PinColor.RED;
+                    newColor = Pin.RED;
                     break;
                 case 1:
-                    newColor = PinColor.BLUE;
+                    newColor = Pin.BLUE;
                     break;
                 case 2:
-                    newColor = PinColor.GREEN;
+                    newColor = Pin.GREEN;
                     break;
                 case 3:
-                    newColor = PinColor.YELLOW;
+                    newColor = Pin.YELLOW;
                     break;
                 case 4:
-                    newColor = PinColor.PURPLE;
+                    newColor = Pin.PURPLE;
                     break;
                 case 5:
-                    newColor = PinColor.CYAN;
+                    newColor = Pin.CYAN;
                     break;
                 default:
                     break;
@@ -106,7 +106,7 @@ public class Game {
                     break;
                 }
                 if(j == 3){
-                    combination[i].getPin().setColor(newColor);
+                    combination[i].setColor(newColor);
                     usedColors[i] = newColor;
                     i++;
                 }
@@ -117,8 +117,8 @@ public class Game {
     //Reset round by setting up player's and evaluation's holes with empty pins
     public void reset(){
         for (int i = 0; i < 4; i++){
-            playerHoles[i].getPin().setColor(PinColor.EMPTY);
-            evaluationHoles[i].getPin().setColor(PinColor.EMPTY);
+            playerHoles[i].setColor(Pin.EMPTY);
+            evaluationHoles[i].setColor(Pin.EMPTY);
         }
     }
 
@@ -130,8 +130,8 @@ public class Game {
 
         //add BLACK pins
         for(int i = 0; i < 4; i++){
-            if(playerHoles[i].getPin().getColor() == combination[i].getPin().getColor()){
-                evaluationHoles[position_counter].getPin().setColor(PinColor.BLACK);
+            if(playerHoles[i].getColor() == combination[i].getColor()){
+                evaluationHoles[position_counter].setColor(Pin.BLACK);
                 markingCombinationHoles[i] = 1;
                 position_counter++;
             }
@@ -140,8 +140,8 @@ public class Game {
         //add WHITE PINS
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
-                if(playerHoles[i].getPin().getColor() == combination[j].getPin().getColor() && markingCombinationHoles[j] != 1){
-                    evaluationHoles[position_counter].getPin().setColor(PinColor.GREY);
+                if(playerHoles[i].getColor() == combination[j].getColor() && markingCombinationHoles[j] != 1){
+                    evaluationHoles[position_counter].setColor(Pin.GREY);
                     markingCombinationHoles[j] = 1;
                     position_counter++;
                 }
@@ -151,10 +151,10 @@ public class Game {
         //fill history data with player tip and evaluation
         for (int i = 0; i < 8; i++){
             if (i < 4) {
-                history[round][i].getPin().setColor(playerHoles[i].getPin().getColor());
+                history[round][i].setColor(playerHoles[i].getColor());
             }
             else {
-                history[round][i].getPin().setColor(evaluationHoles[i - 4].getPin().getColor());
+                history[round][i].setColor(evaluationHoles[i - 4].getColor());
             }
         }
 
@@ -164,14 +164,16 @@ public class Game {
             gameState = GameState.LOSE;
         }
 
-        if(position_counter == 4) {
-            gameState = GameState.WIN;
-            return;
+        for(Hole hole: evaluationHoles){
+            if(hole.getColor() != Pin.BLACK){
+                return;
+            }
         }
+        gameState = GameState.WIN;
     }
 
     //enables player to put pin in hole
-    public void putPin(PinColor color, int index){
-        playerHoles[index].getPin().setColor(color);
+    public void putPin(Pin color, int index){
+        playerHoles[index].setColor(color);
     }
 }

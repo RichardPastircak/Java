@@ -1,12 +1,10 @@
 package sk.tuke.gamestudio.service;
 
 import sk.tuke.gamestudio.entity.Rating;
-import sk.tuke.gamestudio.entity.Score;
-import sk.tuke.kpi.kp.mastermind.consoleui.Console;
+
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class RatingServiceJDBC implements RatingService{
     public static final String URL = "jdbc:postgresql://localhost/gamestudio";
@@ -33,7 +31,7 @@ public class RatingServiceJDBC implements RatingService{
             selectStatement.setString(1, rating.getGame());
             selectStatement.setString(2, rating.getPlayer());
 
-            try (ResultSet rs = selectStatement.executeQuery();
+            try (ResultSet rs = selectStatement.executeQuery()
             ){
                 if (rs.next()){
                     PreparedStatement deleteStatement = connection.prepareStatement(DELETE_COLUMN);
@@ -54,7 +52,6 @@ public class RatingServiceJDBC implements RatingService{
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement statement = connection.prepareStatement(SELECT_FOR_AVERAGESCORE)
         ){
-
             statement.setString(1, game);
             try(ResultSet rs = statement.executeQuery()) {
                 int averageRating = 0;
