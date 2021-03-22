@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Game {
     int round;
-    GameState gameState = GameState.PLAYING;
+    private GameState gameState = GameState.PLAYING;
     private Hole[] combination;
     private Hole[] playerHoles;
     private Hole[] evaluationHoles;
@@ -54,7 +54,7 @@ public class Game {
         return round;
     }
 
-    /*Other functions*/
+    /*------------------------Other functions-----------------------------------*/
     public void fillUpHoles(){
         for (int i = 0; i < 4; i++){
             playerHoles[i] = new Hole();

@@ -428,6 +428,7 @@ public class Console {
         return bestRound;
     }
 
+    //the prints after game where player can choose from database functions
     private void callDatabaseFunctions(){
         score();
         String input;
