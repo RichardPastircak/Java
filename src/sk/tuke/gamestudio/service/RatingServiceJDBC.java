@@ -61,7 +61,7 @@ public class RatingServiceJDBC implements RatingService{
                     numOfRatings++;
                 }
 
-                if (numOfRatings == 0) return 0;
+                if (numOfRatings == 0 || averageRating == 0) return 0;
                 return averageRating / numOfRatings;
             }
         }catch (SQLException e){

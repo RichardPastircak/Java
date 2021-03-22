@@ -110,6 +110,7 @@ public class Console {
                 "   [H + number of first round, from which you want too see history + - + number of last round (included), till which you want to see history, for example: H2-3 -> shows your guesses and evaluation from rounds 2 and 3.\n" +
                 "Report bug or send your idea for improvement [C]\n" +
                 "What action do you wish to take?");
+        show(Game.getGame().getCombination(), 4);
 
         do {
             System.out.print(ANSI_YELLOW +  "Round " + (Game.getGame().getRound()+1) + ": " + ANSI_RESET);
@@ -286,7 +287,7 @@ public class Console {
             if (Pattern.matches("AR", input)) showAverageRating();
             else if(Pattern.matches("SC", input)) showComments();
             else if(!Pattern.matches("E", input)) {
-                System.out.println("Sorry I don't know what you mean. Could you say it again, please?");
+                System.out.println("\nSorry I don't know what you mean. Could you say it again, please?");
             }
         }while (!Pattern.matches("E", input));
     }
@@ -329,20 +330,27 @@ public class Console {
     }
 
     private void showComments(){
-        for (Comment comment : getCommentService().getComments(gameName)){
-            System.out.println("Player: " + comment.getPlayer());
-            System.out.println("Comment: " + comment.getComment());
-            System.out.println("Time: " + new SimpleDateFormat("dd.MM.yyyy HH:mm").format(comment.getCommentedOn()) + "\n");
+        List<Comment> comments = getCommentService().getComments(gameName);
+        if(comments.size() == 0){
+            System.out.println("\nIt seems nobody gave a comment to this game yet.");
+        }
+        else {
+            System.out.println();
+            for (Comment comment : comments) {
+                System.out.println("Player: " + comment.getPlayer());
+                System.out.println("Comment: " + comment.getComment());
+                System.out.println("Time: " + new SimpleDateFormat("dd.MM.yyyy HH:mm").format(comment.getCommentedOn()) + "\n");
+            }
         }
     }
 
     //create rating to database
     private void rate(){
         String rating;
-        System.out.print("Please rate us with number between 0-10 (included, only non decimal values).\nYour rating: ");
-        do {
+        System.out.print("\nPlease rate us with number between 0-10 (included, only non decimal values).\nYour rating: ");
+        while (!Pattern.matches("[0-9]||10", rating = scanner.nextLine())){
             System.out.print("Sorry, I don't understand this type of rating. Could you write it again, please?\nYour rating: ");
-        } while (!Pattern.matches("[0-9]||10", rating = scanner.nextLine()));
+        }
         getRattingService().setRating(new Rating(gameName, playerName, Integer.parseInt(rating), new Timestamp(System.currentTimeMillis())));
         System.out.println("Thank you for your rating!");
     }
@@ -387,17 +395,17 @@ public class Console {
             input = scanner.nextLine().toUpperCase();
             if(Pattern.matches("Y", input)){
                 List<Score> playersScore = getScoreService().getTopScores(gameName);
-                for(int i = 0; i < 10; i++){
-                    System.out.println((i+1) + ".Player: " + playersScore.get(i).getPlayer());
-                    System.out.println("  Score: " + playersScore.get(i).getPoints());
-                    System.out.println("  Played at: " + new SimpleDateFormat("dd.MM.yyyy HH:mm").format(playersScore.get(i).getPlayedOn()) + "\n");
-                }
+                System.out.println();
+                for (int i = 0; i < playersScore.size(); i++) {
+                        System.out.println((i + 1) + ".Player: " + playersScore.get(i).getPlayer());
+                        System.out.println("  Score: " + playersScore.get(i).getPoints());
+                        System.out.println("  Played at: " + new SimpleDateFormat("dd.MM.yyyy HH:mm").format(playersScore.get(i).getPlayedOn()) + "\n");
+                    }
             }
             else if (!Pattern.matches("[YN]", input)){
-                System.out.print("Sorry I don't know what you mean. Could you say it again, please?\nYour decision: ");
+                System.out.print("\nSorry I don't know what you mean. Could you say it again, please?\nYour decision: ");
             }
         } while (!Pattern.matches("[YN]", input));
-        System.out.println();
     }
 
     /*-------------------------------- DATABASE HELP FUNCTIONS -------------------------------------*/
@@ -433,14 +441,12 @@ public class Console {
         score();
         String input;
         printForCDF();
+        int countUserInputs = 1;
 
         do {
             input = scanner.nextLine().toUpperCase();
             if(Pattern.matches("F", input)) comment();
-            else if (Pattern.matches("SC", input)) {
-                showComments();
-                printForCDF();
-            }
+            else if (Pattern.matches("SC", input)) showComments();
             else if (Pattern.matches("R", input)) rate();
             else if (Pattern.matches("AR", input)) showAverageRating();
             else if (Pattern.matches("FR", input)) playerRating();
@@ -448,13 +454,15 @@ public class Console {
                 System.out.println("Sorry I don't know what you mean. Could you say it again, please?");
             }
 
-            if (!Pattern.matches("SC|E", input)) System.out.print("\nYour decision: ");
+            if(Pattern.matches("SC", input) || (countUserInputs % 5 == 0)) printForCDF();
+            else if (!Pattern.matches("SC|E", input)) System.out.print("\nYour decision: ");
+            countUserInputs++;
         }while (!Pattern.matches("E", input));
     }
 
     //just printing stuff for callDatabaseDunctions - just for reuseubality
     private void printForCDF(){
-        System.out.print("There are few more options available for you:\n" +
+        System.out.print("\nThere are few more options available for you:\n" +
                 "   If you want to share some feedback with us [F]\n" +
                 "   If you want to see others comments about game " + gameName + " [SC]\n" +
                 "   If you want to rate the game [R]\n" +
