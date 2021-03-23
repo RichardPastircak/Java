@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 
@@ -77,6 +78,7 @@ public class Console {
 
         //Game Loop
         do {
+
             System.out.println(ANSI_RED + "\nROUND " + (Game.getGame().getRound()+1) + ANSI_RESET);
             handleInput();
         }while (Game.getGame().getGameState() == GameState.PLAYING);
@@ -98,25 +100,30 @@ public class Console {
     //Dealing with all user input, loads it and take action according to user wish
     private void handleInput(){
         int emptyHoles = 0;
-
+        int print = 0;
         //basic game isntructions
         String input;
-        System.out.println("Following options are available for you:\n" +
-                "Add colored pin to certain position [A + Color's first character + Position where you wish" + " to place pin], example: AB1 -> places blue pin to first spot.\n" +
-                "The Colors: " + ANSI_RED + "R " + ANSI_BLUE + "B " + ANSI_GREEN + "G " + ANSI_YELLOW + "Y " + ANSI_PURPLE + "P " + ANSI_CYAN + "C" + ANSI_RESET + ".\n" +
-                "Ask for evaluation of your guess when you filled all places with pins [E].\n" +
-                "Show history of certain attempt/s:\n" +
-                "   [H + number of round, from which you wished to see history], for example: H1 -> shows your guess and evaluation from round 1.\n" +
-                "   [H + number of first round, from which you want too see history + - + number of last round (included), till which you want to see history, for example: H2-3 -> shows your guesses and evaluation from rounds 2 and 3.\n" +
-                "Report bug or send your idea for improvement [C]\n" +
-                "What action do you wish to take?");
-        show(Game.getGame().getCombination(), 4);
+        //playerOptions();
 
         do {
+            if (print % 6 == 0){
+                System.out.println("\nFollowing options are available for you:\n" +
+                        "Add colored pin to certain position [A + Color's first character + Position where you wish" + " to place pin], example: AB1 -> places blue pin to first hole.\n" +
+                        "The Colors: " + ANSI_RED + "R " + ANSI_BLUE + "B " + ANSI_GREEN + "G " + ANSI_YELLOW + "Y " + ANSI_PURPLE + "P " + ANSI_CYAN + "C" + ANSI_RESET + ".\n" +
+                        "Ask for evaluation of your guess when you filled all places with pins [E].\n" +
+                        "Show history of certain attempt/s:\n" +
+                        "   [H + number of round, from which you wished to see history], for example: H1 -> shows your guess and evaluation from round 1.\n" +
+                        "   [H + number of first round, from which you want too see history + - + number of last round (included), till which you want to see history, for example: H2-3 -> shows your guesses and evaluation from rounds 2 and 3.\n" +
+                        "Report bug or send your idea for improvement [C]\n" +
+                        "What action do you wish to take?");
+            }
             System.out.print(ANSI_YELLOW +  "Round " + (Game.getGame().getRound()+1) + ": " + ANSI_RESET);
             show(Game.getGame().getPlayerHoles(), 4);
             System.out.println("\n");
             System.out.print("Your action: ");
+
+
+
             input = scanner.nextLine().toUpperCase();
 
             //Adding Pin
@@ -189,10 +196,12 @@ public class Console {
                 int index1 = input.charAt(1) - '1';
                 int index2 = input.charAt(3) - '1';
 
-                if (index1 == index2) {
-                    printHistory(index1);
-                } else if (index1 >= Game.getGame().getRound() || index2 >= Game.getGame().getRound()) {
+
+                if (index1 >= Game.getGame().getRound() || index2 >= Game.getGame().getRound()) {
                     System.out.println("At least one round from those you wished to display wasn't played yet, please choose different rounds or action.");
+                }
+                else if (index1 == index2) {
+                    printHistory(index1);
                 } else {
                     for (int i = index1; i <= index2; i++) {
                         printHistory(i);
@@ -208,7 +217,14 @@ public class Console {
             else {
                 System.out.println("Sorry, I don't quite understand your actions. Could you said it again?");
             }
-        } while (!Pattern.matches("E", input) || emptyHoles != 0); //REPAIR
+
+            print++;
+        } while (!Pattern.matches("E", input) || emptyHoles != 0);
+
+        if(Game.getGame().getGameState() == GameState.PLAYING) {
+            System.out.print(ANSI_GREY + "Press ENTER to continue" + ANSI_RESET);
+            scanner.nextLine();
+        }
     }
 
     //Prints various type of fields during game
@@ -233,8 +249,9 @@ public class Console {
 
         //Load stuff from player
         System.out.println(ANSI_GREEN + "\nWELCOME TO MASTERMIND!" + ANSI_RESET);
-        System.out.print("How shall I call you player? Please don't use name 'O' or 'o' as that is reserved for some game functionality\n" +
-                "Also don't use name 'Admin' as it is reserved for superuser.\nInsert name: ");
+        System.out.print("How shall I call you player?\n" +
+                 ANSI_RED + "Please don't use name 'O' or 'o' as that is reserved for some game functionality\n" +
+                "Also don't use name 'Admin' as it is reserved for superuser." +ANSI_RESET+ "\nInsert name: ");
         playerName = scanner.nextLine();
         while (Pattern.matches("O|o", playerName)){
             System.out.print("Sorry this name is reserved because of some game functions. Try something else, please\nYour name: ");
@@ -277,7 +294,7 @@ public class Console {
         }
 
         System.out.println("\nHello " + ANSI_BLUE +playerName + ANSI_RESET + "!");
-        System.out.println("There are few options that you may be interested in:\n" +
+        System.out.println("There are few options that you may be interested in before starting the game:\n" +
                 "   If you want to see average rating of game " + gameName + " [AR]\n" +
                 "   If you want to see others comments about game [SC]\n" +
                 "   If you are not interested in any of the mentioned above [E]");
@@ -347,8 +364,8 @@ public class Console {
     //create rating to database
     private void rate(){
         String rating;
-        System.out.print("\nPlease rate us with number between 0-10 (included, only non decimal values).\nYour rating: ");
-        while (!Pattern.matches("[0-9]||10", rating = scanner.nextLine())){
+        System.out.print("\nPlease rate us with number between 1-10 (included, only non decimal values).\nYour rating: ");
+        while (!Pattern.matches("[1-9]|10", rating = scanner.nextLine())){
             System.out.print("Sorry, I don't understand this type of rating. Could you write it again, please?\nYour rating: ");
         }
         getRattingService().setRating(new Rating(gameName, playerName, Integer.parseInt(rating), new Timestamp(System.currentTimeMillis())));
@@ -356,7 +373,10 @@ public class Console {
     }
 
     private void showAverageRating (){
-        System.out.println("\nThe average rating of game is " + getRattingService().getAverageRating(gameName));
+        int rating = getRattingService().getAverageRating(gameName);
+
+        if(rating == 0) System.out.println("It seems that nobody rated this game yet.");
+        else System.out.println("The average rating of game is " + rating);
     }
 
     private void playerRating(){
@@ -454,8 +474,12 @@ public class Console {
                 System.out.println("Sorry I don't know what you mean. Could you say it again, please?");
             }
 
-            if(Pattern.matches("SC", input) || (countUserInputs % 5 == 0)) printForCDF();
+            if(Pattern.matches("SC|FR", input) || (countUserInputs % 5 == 0)) {
+                printForCDF();
+                countUserInputs = 0;
+            }
             else if (!Pattern.matches("SC|E", input)) System.out.print("\nYour decision: ");
+
             countUserInputs++;
         }while (!Pattern.matches("E", input));
     }
