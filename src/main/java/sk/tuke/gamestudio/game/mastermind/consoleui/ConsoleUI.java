@@ -36,11 +36,11 @@ public class ConsoleUI {
     private static final String gameName = "Mastermind";
 
     @Autowired
-    private static CommentService commentService;
+    private CommentService commentService;
     @Autowired
-    private static RatingService rattingService;
+    private RatingService ratingService;
     @Autowired
-    private static ScoreService scoreService;
+    private ScoreService scoreService;
 
     /*---------------------Constructor + G & S--------------------------------*/
     public ConsoleUI(Game game) {
@@ -48,17 +48,17 @@ public class ConsoleUI {
         this.game = game;
     }
 
-    private static CommentService getCommentService() {
+    private CommentService getCommentService() {
         //if(commentService == null) commentService = new CommentServiceJDBC();
         return commentService;
     }
 
-    private static RatingService getRattingService() {
+    private RatingService getRatingService() {
         //if(rattingService == null) rattingService = new RatingServiceJDBC();
-        return rattingService;
+        return ratingService;
     }
 
-    private static ScoreService getScoreService() {
+    private ScoreService getScoreService() {
         //if (scoreService == null) scoreService = new ScoreServiceJDBC();
         return scoreService;
     }
@@ -118,7 +118,6 @@ public class ConsoleUI {
                         "Report bug or send your idea for improvement [C]\n" +
                         "What action do you wish to take?");
             }
-            show(game.getCombination(), 4);
             System.out.print(ANSI_YELLOW +  "Round " + (game.getRound()+1) + ": " + ANSI_RESET);
             show(game.getPlayerHoles(), 4);
             System.out.println("\n");
@@ -289,11 +288,11 @@ public class ConsoleUI {
                         System.out.print("Awaiting your orders: ");
                         adminInput = scanner.nextLine().toUpperCase();
                         if (Pattern.matches("DC", adminInput)) getCommentService().reset();
-                        else if (Pattern.matches("DR",adminInput)) getRattingService().reset();
+                        else if (Pattern.matches("DR",adminInput)) getRatingService().reset();
                         else if (Pattern.matches("DS",adminInput)) getScoreService().reset();
                         else if (Pattern.matches("FD",adminInput)) {
                             getCommentService().reset();
-                            getRattingService().reset();
+                            getRatingService().reset();
                             getScoreService().reset();
                         }
                         else if (!Pattern.matches("E",adminInput)) {
@@ -367,7 +366,7 @@ public class ConsoleUI {
     }
 
     private void showComments(){
-        List<Comment> comments = getCommentService().getComments(gameName);
+        List<Comment> comments = commentService.getComments(gameName);
         if(comments.size() == 0){
             System.out.println("\nIt seems nobody gave a comment to this game yet.");
         }
@@ -388,12 +387,12 @@ public class ConsoleUI {
         while (!Pattern.matches("[1-9]|10", rating = scanner.nextLine())){
             System.out.print("Sorry, I don't understand this type of rating. Could you write it again, please?\nYour rating: ");
         }
-        getRattingService().setRating(new Rating(gameName, playerName, Integer.parseInt(rating), new Timestamp(System.currentTimeMillis())));
+        getRatingService().setRating(new Rating(gameName, playerName, Integer.parseInt(rating), new Timestamp(System.currentTimeMillis())));
         System.out.println("Thank you for your rating!");
     }
 
     private void showAverageRating (){
-        int rating = getRattingService().getAverageRating(gameName);
+        int rating = getRatingService().getAverageRating(gameName);
 
         if(rating == 0) System.out.println("It seems that nobody rated this game yet.");
         else System.out.println("The average rating of game is " + rating);
@@ -406,7 +405,7 @@ public class ConsoleUI {
 
         System.out.print("Tell me your friends name: ");
         friendName = scanner.nextLine();
-        friendRating = getRattingService().getRating(gameName, friendName);
+        friendRating = getRatingService().getRating(gameName, friendName);
         do {
 
             if (friendRating == -1) {
@@ -418,7 +417,7 @@ public class ConsoleUI {
             }
 
             friendName = scanner.nextLine();
-            friendRating = getRattingService().getRating(gameName, friendName);
+            friendRating = getRatingService().getRating(gameName, friendName);
         } while (!Pattern.matches("O|o", friendName));
     }
 

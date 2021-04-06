@@ -3,6 +3,7 @@ package sk.tuke.gamestudio.service;
 import sk.tuke.gamestudio.entity.Rating;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
@@ -22,12 +23,19 @@ public class RatingServiceJPA implements RatingService{
 
     @Override
     public int getAverageRating(String game) throws RatingException {
-        return (int)entityManager.createNamedQuery("Rating.getAverageRating").setParameter("game", game).getSingleResult();
+        if(entityManager.createNamedQuery("Rating.getAverageRating").setParameter("game", game).getSingleResult() == null){
+                return 0;
+        }
+        return ((Double)entityManager.createNamedQuery("Rating.getAverageRating").setParameter("game", game).getSingleResult()).intValue();
     }
 
     @Override
     public int getRating(String game, String player) throws RatingException {
-        return (int)entityManager.createNamedQuery("Rating.getRating").setParameter("game", game).setParameter("player", player).getSingleResult();
+        try {
+            return (int)entityManager.createNamedQuery("Rating.getRating").setParameter("game", game).setParameter("player", player).getSingleResult();
+        }catch (NoResultException e) {
+            return -1;
+        }
     }
 
     @Override

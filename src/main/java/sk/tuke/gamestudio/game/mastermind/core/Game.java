@@ -16,7 +16,7 @@ public class Game {
         playerHoles = new Hole[4];
         evaluationHoles = new Hole[4];
         history = new Hole[9][8];
-        round = 0;
+        round = 8;
 
         fillUpHoles();
         generateCombination();
