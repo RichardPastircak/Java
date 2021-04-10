@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
@@ -13,7 +14,7 @@ import java.sql.Timestamp;
         query = "DELETE FROM Score")
 
 
-public class Score {
+public class Score implements Serializable {
     @Id
     @GeneratedValue
     private int identif;

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
@@ -15,7 +16,7 @@ import java.sql.Timestamp;
 @NamedQuery( name = "Comment.resetComments",
         query = "DELETE FROM Comment")
 
-public class Comment {
+public class Comment  implements Serializable {
     @Id
     @GeneratedValue
     private int identif;

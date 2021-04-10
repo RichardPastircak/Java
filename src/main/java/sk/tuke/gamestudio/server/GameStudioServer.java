@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 import sk.tuke.gamestudio.service.*;
-import sk.tuke.gamestudio.service.ScoreServiceRestClient;
 
 @SpringBootApplication
 @Configuration
@@ -20,22 +18,16 @@ public class GameStudioServer {
 
     @Bean
     public ScoreService scoreService() {
-        //return new ScoreServiceJPA();
-        return new ScoreServiceRestClient();
+        return new ScoreServiceJPA();
     }
 
     @Bean
     public RatingService ratingService() {
-        //return new RatingServiceJPA();
-        return new RatingServiceRestClient();
+        return new RatingServiceJPA();
     }
 
     @Bean
     public CommentService commentService() {
-        //return new CommentServiceJPA();
-        return new CommentServiceRestClient();
+        return new CommentServiceJPA();
     }
-
-    @Bean
-    public RestTemplate restTemplate() {return new RestTemplate();}
 }
