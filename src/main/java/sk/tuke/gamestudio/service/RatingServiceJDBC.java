@@ -7,9 +7,6 @@ import java.sql.*;
 
 
 public class RatingServiceJDBC implements RatingService{
-    public static final String URL = "jdbc:postgresql://localhost/gamestudio";
-    public static final String USER = "postgres";
-    public static final String PASSWORD = "postgres";
     public static final String SELECT = "SELECT rating FROM rating WHERE game = ? AND player = ?";
     public static final String SELECT_FOR_AVERAGESCORE = "SELECT rating FROM rating WHERE game = ?";
     public static final String DELETE = "DELETE FROM rating";
@@ -19,7 +16,7 @@ public class RatingServiceJDBC implements RatingService{
     //inserts new rating to database (only one rating per player)
     @Override
     public void setRating(Rating rating) throws RatingException {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
              PreparedStatement statement = connection.prepareStatement(INSERT);
              PreparedStatement selectStatement = connection.prepareStatement(SELECT)
         ){
@@ -49,7 +46,7 @@ public class RatingServiceJDBC implements RatingService{
     //gets average rating of game from all players
     @Override
     public int getAverageRating(String game) throws RatingException {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
              PreparedStatement statement = connection.prepareStatement(SELECT_FOR_AVERAGESCORE)
         ){
             statement.setString(1, game);
@@ -72,7 +69,7 @@ public class RatingServiceJDBC implements RatingService{
     //gets rating of certain player returns rating score or -1 if combination of game and player wasnt found
     @Override
     public int getRating(String game, String player) throws RatingException {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
              PreparedStatement statement = connection.prepareStatement(SELECT);
         ) {
             statement.setString(1, game);
@@ -90,7 +87,7 @@ public class RatingServiceJDBC implements RatingService{
     //delets content of ratin table
     @Override
     public void reset() throws RatingException {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
              Statement statement = connection.createStatement();
         ) {
             statement.executeUpdate(DELETE);

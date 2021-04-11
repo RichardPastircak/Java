@@ -4,7 +4,10 @@ package sk.tuke.gamestudio.game.mastermind.core;
 import java.util.Random;
 
 public class Game {
-    private int round;
+    private int currentRound;
+    private final int numOfRounds;
+    private final int numOfHoles;
+    private final int numOfHistoryHoles;
     private GameState gameState = GameState.PLAYING;
     private Hole[] combination;
     private Hole[] playerHoles;
@@ -12,11 +15,16 @@ public class Game {
     private Hole[][] history;
 
     public Game() {
-        combination = new Hole[4];
-        playerHoles = new Hole[4];
-        evaluationHoles = new Hole[4];
-        history = new Hole[9][8];
-        round = 8;
+        currentRound = 0;
+        numOfRounds = 9;
+        numOfHoles = 4;
+        numOfHistoryHoles = 2*numOfHoles;
+
+        combination = new Hole[numOfHoles];
+        playerHoles = new Hole[numOfHoles];
+        evaluationHoles = new Hole[numOfHoles];
+        history = new Hole[numOfRounds][numOfHistoryHoles];
+
 
         fillUpHoles();
         generateCombination();
@@ -44,20 +52,32 @@ public class Game {
         return gameState;
     }
 
-    public int getRound() {
-        return round;
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public int getNumOfRounds() {
+        return numOfRounds;
+    }
+
+    public int getNumOfHoles() {
+        return numOfHoles;
+    }
+
+    public int getNumOfHistoryHoles() {
+        return numOfHistoryHoles;
     }
 
     /*------------------------Other functions-----------------------------------*/
     public void fillUpHoles(){
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < numOfHoles; i++){
             playerHoles[i] = new Hole();
             evaluationHoles[i] = new Hole();
             combination[i] = new Hole();
         }
 
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 8; j++){
+        for(int i = 0; i < numOfRounds; i++){
+            for(int j = 0; j < numOfHistoryHoles; j++){
                 history[i][j] = new Hole();
             }
         }
@@ -65,12 +85,17 @@ public class Game {
 
     //generate random combination
     public void generateCombination() {
-        Pin[] usedColors = {Pin.EMPTY, Pin.EMPTY, Pin.EMPTY, Pin.EMPTY};
+        Pin[] usedColors = new Pin[numOfHoles];
+
+        for (Pin pin : usedColors){
+            pin = Pin.EMPTY;
+        }
+
         Pin newColor = Pin.EMPTY;
         Random rand = new Random();
         int i = 0;
 
-        while(i < 4) {
+        while(i < numOfHoles) {
             int tmp = rand.nextInt(6);
             switch (tmp) {
                 case 0:
@@ -95,11 +120,12 @@ public class Game {
                     break;
             }
 
-            for(int j = 0; j < 4; j++){
+            for(int j = 0; j < numOfHoles; j++){
                 if(newColor == usedColors[j]){
                     break;
                 }
-                if(j == 3){
+                //is at the end, no match was found
+                else if(j == numOfHoles-1){
                     combination[i].setColor(newColor);
                     usedColors[i] = newColor;
                     i++;
@@ -110,7 +136,7 @@ public class Game {
 
     //Reset round by setting up player's and evaluation's holes with empty pins
     public void reset(){
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < numOfHoles; i++){
             playerHoles[i].setColor(Pin.EMPTY);
             evaluationHoles[i].setColor(Pin.EMPTY);
         }
@@ -119,11 +145,14 @@ public class Game {
     //evaluates player score
     public void evaluate(){
         int position_counter = 0;
-        int[] markingCombinationHoles = {0,0,0,0};
+        int[] markingCombinationHoles = new int[numOfHoles];
+        for(int i : markingCombinationHoles){
+            i = 0;
+        }
 
 
         //add BLACK pins
-        for(int i = 0; i < 4; i++){
+        for(int i = 0; i < numOfHoles; i++){
             if(playerHoles[i].getColor() == combination[i].getColor()){
                 evaluationHoles[position_counter].setColor(Pin.BLACK);
                 markingCombinationHoles[i] = 1;
@@ -132,8 +161,8 @@ public class Game {
         }
 
         //add WHITE PINS
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 4; j++){
+        for(int i = 0; i < numOfHoles; i++){
+            for(int j = 0; j < numOfHoles; j++){
                 if(playerHoles[i].getColor() == combination[j].getColor() && markingCombinationHoles[j] != 1){
                     evaluationHoles[position_counter].setColor(Pin.GREY);
                     markingCombinationHoles[j] = 1;
@@ -143,18 +172,18 @@ public class Game {
         }
 
         //fill history data with player tip and evaluation
-        for (int i = 0; i < 8; i++){
-            if (i < 4) {
-                history[round][i].setColor(playerHoles[i].getColor());
+        for (int i = 0; i < numOfHistoryHoles; i++){
+            if (i < numOfHistoryHoles/2) {
+                history[currentRound][i].setColor(playerHoles[i].getColor());
             }
             else {
-                history[round][i].setColor(evaluationHoles[i - 4].getColor());
+                history[currentRound][i].setColor(evaluationHoles[i - numOfHistoryHoles/2].getColor());
             }
         }
 
         //gamestate check
-        round++;
-        if(round == 9){
+        currentRound++;
+        if(currentRound == numOfRounds){
             gameState = GameState.LOSE;
         }
 

@@ -48,29 +48,16 @@ public class ConsoleUI {
         this.game = game;
     }
 
-    private CommentService getCommentService() {
-        //if(commentService == null) commentService = new CommentServiceJDBC();
-        return commentService;
-    }
-
-    private RatingService getRatingService() {
-        //if(rattingService == null) rattingService = new RatingServiceJDBC();
-        return ratingService;
-    }
-
-    private ScoreService getScoreService() {
-        //if (scoreService == null) scoreService = new ScoreServiceJDBC();
-        return scoreService;
-    }
-
     /*--------------------------- PLAY + HANDLE + SHOW-------------------------------------------*/
     //Main game loop
     public void play(){
         gameIntroduction();
 
+        show(game.getCombination(), game.getNumOfHoles());
+
         //Game introduction
-        System.out.println("\nI am thinking 4 color combination, none of those colors are same. The color combination is represented by pins which can be: " + ANSI_RED + "RED" + ANSI_RESET + ", " + ANSI_BLUE + "BLUE" + ANSI_RESET + ", " + ANSI_GREEN + "GREEN" + ANSI_RESET + ", " + ANSI_YELLOW + "YELLOW" + ANSI_RESET + ", " + ANSI_PURPLE + "PURPLE " + ANSI_RESET + "and " + ANSI_CYAN +  "CYAN" + ANSI_RESET + ".\n" +
-                "You have 9 rounds (attempts) to guess the combination. Your guess will be evaluated with" + ANSI_BLACK + " BLACK " + ANSI_RESET + ",if you guessed the color and the position of the pin correctly" + ANSI_GREY + " GREY " + ANSI_RESET + "if you guessed only the color of the pin correctly and WHITE if you guessed none of those correctly.\n" +
+        System.out.println("\nI am thinking " + game.getNumOfHoles() + " color combination, none of those colors are same. The color combination is represented by pins which can be: " + ANSI_RED + "RED" + ANSI_RESET + ", " + ANSI_BLUE + "BLUE" + ANSI_RESET + ", " + ANSI_GREEN + "GREEN" + ANSI_RESET + ", " + ANSI_YELLOW + "YELLOW" + ANSI_RESET + ", " + ANSI_PURPLE + "PURPLE " + ANSI_RESET + "and " + ANSI_CYAN +  "CYAN" + ANSI_RESET + ".\n" +
+                "You have " + game.getNumOfRounds() + " rounds (attempts) to guess the combination. Your guess will be evaluated with" + ANSI_BLACK + " BLACK " + ANSI_RESET + ",if you guessed the color and the position of the pin correctly" + ANSI_GREY + " GREY " + ANSI_RESET + "if you guessed only the color of the pin correctly and WHITE if you guessed none of those correctly.\n" +
                 "Please remember, that the position of black pins, grey pins or white pins may has nothing in common with the the position of pins in your guess as in evaluation part the black pins will always be first first, the grey pins second and white pins last.\n" +
                 "Good luck and Have fun.\n" +
                 ANSI_GREY + "Press ENTER to continue" + ANSI_RESET);
@@ -80,7 +67,7 @@ public class ConsoleUI {
         //Game Loop
         do {
 
-            System.out.println(ANSI_RED + "\nROUND " + (game.getRound()+1) + ANSI_RESET);
+            System.out.println(ANSI_RED + "\nROUND " + (game.getCurrentRound()+1) + ANSI_RESET);
             handleInput();
         }while (game.getGameState() == GameState.PLAYING);
 
@@ -102,9 +89,9 @@ public class ConsoleUI {
     private void handleInput(){
         int emptyHoles = 0;
         int print = 0;
+
         //basic game isntructions
         String input;
-        //playerOptions();
 
         do {
             if (print % 6 == 0){
@@ -118,42 +105,34 @@ public class ConsoleUI {
                         "Report bug or send your idea for improvement [C]\n" +
                         "What action do you wish to take?");
             }
-            System.out.print(ANSI_YELLOW +  "Round " + (game.getRound()+1) + ": " + ANSI_RESET);
-            show(game.getPlayerHoles(), 4);
+            System.out.print(ANSI_YELLOW +  "Round " + (game.getCurrentRound()+1) + ": " + ANSI_RESET);
+            show(game.getPlayerHoles(), game.getNumOfHoles());
             System.out.println("\n");
             System.out.print("Your action: ");
-
-
 
             input = scanner.nextLine().toUpperCase();
 
             //Adding Pin
-            if (Pattern.matches("A[RBGYPC][1-4]", input)) {
+            if (Pattern.matches("A[RBGYPC][1-"+game.getNumOfHoles()+"]", input)) {
                 int index = input.charAt(2) - '1';
                 switch (input.charAt(1)) {
                     case 'R':
-                        game
-                                .putPin(Pin.RED, index);
+                        game.putPin(Pin.RED, index);
                         break;
                     case 'B':
-                        game
-                                .putPin(Pin.BLUE, index);
+                        game.putPin(Pin.BLUE, index);
                         break;
                     case 'G':
-                        game
-                                .putPin(Pin.GREEN, index);
+                        game.putPin(Pin.GREEN, index);
                         break;
                     case 'Y':
-                        game
-                                .putPin(Pin.YELLOW, index);
+                        game.putPin(Pin.YELLOW, index);
                         break;
                     case 'P':
-                        game
-                                .putPin(Pin.PURPLE, index);
+                        game.putPin(Pin.PURPLE, index);
                         break;
                     case 'C':
-                        game
-                                .putPin(Pin.CYAN, index);
+                        game.putPin(Pin.CYAN, index);
                         break;
                     default:
                         break;
@@ -164,8 +143,7 @@ public class ConsoleUI {
             else if (Pattern.matches("E", input)) {
                 //checks wether user filled all holes with some pins
                 emptyHoles = 0;
-                for (Hole hole : game
-                        .getPlayerHoles()) {
+                for (Hole hole : game.getPlayerHoles()) {
                     if (hole.getColor() == Pin.EMPTY) {
                         emptyHoles++;
                     }
@@ -177,43 +155,35 @@ public class ConsoleUI {
                     else
                         System.out.println("It seems there are " + emptyHoles + " empty holes, please fill them so I can evaluate your guess.");
                 } else {
-                    System.out.print("Evaluation - Round " + (game
-                            .getRound() + 1) + ": ");
-                    show(game
-                            .getPlayerHoles(), 4);
-                    game
-                            .evaluate();
+                    System.out.print("Evaluation - Round " + (game.getCurrentRound() + 1) + ": ");
+                    show(game.getPlayerHoles(), game.getNumOfHoles());
+                    game.evaluate();
 
                     System.out.print(" | ");
-                    show(game
-                            .getEvaluationHoles(), 4);
+                    show(game.getEvaluationHoles(), game.getNumOfHoles());
                     System.out.println(ANSI_YELLOW + "\n\n-------------------------------------------------------------------------------------------" + ANSI_RESET);
 
-                    game
-                            .reset();
+                    game.reset();
                 }
             }
 
             //shows one line of history
-            else if (Pattern.matches("H[1-8]", input)) {
+            else if (Pattern.matches("H[1-"+(game.getNumOfRounds()-1)+"]", input)) {
                 int index = input.charAt(1) - '1';
-                if (index >= game
-                        .getRound()) {
-                    System.out.println("This round wasn'tplayed yet, please choose different round or action.");
+                if (index >= game.getCurrentRound()) {
+                    System.out.println("This round wasn't played yet, please choose different round or action.");
                 } else {
-                    printHistory(input.charAt(1) - '1');
+                    printHistory(index);
                 }
             }
 
             //shows multiple line of history
-            else if (Pattern.matches("H[1-8]-[1-8]", input)) {
+            else if (Pattern.matches("H[1-"+(game.getNumOfRounds()-1)+"]-[1-"+(game.getNumOfRounds()-1)+"]", input)) {
                 int index1 = input.charAt(1) - '1';
                 int index2 = input.charAt(3) - '1';
 
 
-                if (index1 >= game
-                        .getRound() || index2 >= game
-                        .getRound()) {
+                if (index1 >= game.getCurrentRound() || index2 >= game.getCurrentRound()) {
                     System.out.println("At least one round from those you wished to display wasn't played yet, please choose different rounds or action.");
                 }
                 else if (index1 == index2) {
@@ -234,11 +204,11 @@ public class ConsoleUI {
                 System.out.println("Sorry, I don't quite understand your actions. Could you said it again?");
             }
 
+            //helps with reprinting guidelines for rounds after certian amount of rounds passed
             print++;
         } while (!Pattern.matches("E", input) || emptyHoles != 0);
 
-        if(game
-                .getGameState() == GameState.PLAYING) {
+        if(game.getGameState() == GameState.PLAYING) {
             System.out.print(ANSI_GREY + "Press ENTER to continue" + ANSI_RESET);
             scanner.nextLine();
         }
@@ -287,13 +257,13 @@ public class ConsoleUI {
                     do{
                         System.out.print("Awaiting your orders: ");
                         adminInput = scanner.nextLine().toUpperCase();
-                        if (Pattern.matches("DC", adminInput)) getCommentService().reset();
-                        else if (Pattern.matches("DR",adminInput)) getRatingService().reset();
-                        else if (Pattern.matches("DS",adminInput)) getScoreService().reset();
+                        if (Pattern.matches("DC", adminInput)) commentService.reset();
+                        else if (Pattern.matches("DR",adminInput)) ratingService.reset();
+                        else if (Pattern.matches("DS",adminInput)) scoreService.reset();
                         else if (Pattern.matches("FD",adminInput)) {
-                            getCommentService().reset();
-                            getRatingService().reset();
-                            getScoreService().reset();
+                            commentService.reset();
+                            ratingService.reset();
+                            scoreService.reset();
                         }
                         else if (!Pattern.matches("E",adminInput)) {
                             System.out.println("Seems you misspelled boss");
@@ -346,11 +316,9 @@ public class ConsoleUI {
     //formats printing of history
     private void printHistory(int index){
         System.out.print("History - Round " + (index+1) + ": ");
-        show(game
-                .getHistory()[index], 0, 4);
+        show(game.getHistory()[index], 0, game.getNumOfHistoryHoles()/2);
         System.out.print(" | ");
-        show(game
-                .getHistory()[index], 4, 8);
+        show(game.getHistory()[index], game.getNumOfHistoryHoles()/2, game.getNumOfHistoryHoles());
         System.out.print("\n");
     }
 
@@ -360,7 +328,7 @@ public class ConsoleUI {
     private void comment(){
         System.out.print("\nWhat do you wish to share with me?\nYour comment: ");
         String content = scanner.nextLine();
-        getCommentService().addComment(new Comment(gameName, playerName, content, new Timestamp(System.currentTimeMillis())));
+        commentService.addComment(new Comment(gameName, playerName, content, new Timestamp(System.currentTimeMillis())));
 
         System.out.println("Thank you for your contribution.");
     }
@@ -387,12 +355,12 @@ public class ConsoleUI {
         while (!Pattern.matches("[1-9]|10", rating = scanner.nextLine())){
             System.out.print("Sorry, I don't understand this type of rating. Could you write it again, please?\nYour rating: ");
         }
-        getRatingService().setRating(new Rating(gameName, playerName, Integer.parseInt(rating), new Timestamp(System.currentTimeMillis())));
+        ratingService.setRating(new Rating(gameName, playerName, Integer.parseInt(rating), new Timestamp(System.currentTimeMillis())));
         System.out.println("Thank you for your rating!");
     }
 
     private void showAverageRating (){
-        int rating = getRatingService().getAverageRating(gameName);
+        int rating = ratingService.getAverageRating(gameName);
 
         if(rating == 0) System.out.println("It seems that nobody rated this game yet.");
         else System.out.println("The average rating of game is " + rating);
@@ -405,7 +373,7 @@ public class ConsoleUI {
 
         System.out.print("Tell me your friends name: ");
         friendName = scanner.nextLine();
-        friendRating = getRatingService().getRating(gameName, friendName);
+        friendRating = ratingService.getRating(gameName, friendName);
         do {
 
             if (friendRating == -1) {
@@ -417,24 +385,23 @@ public class ConsoleUI {
             }
 
             friendName = scanner.nextLine();
-            friendRating = getRatingService().getRating(gameName, friendName);
+            friendRating = ratingService.getRating(gameName, friendName);
         } while (!Pattern.matches("O|o", friendName));
     }
 
     //generates score of player
     private void score(){
         int[] bestRound = findBestRound();
-        int score = (10 - game
-                .getRound()) * (bestRound[0]*10 + bestRound[1]*5);
+        int score = (10 - game.getCurrentRound()) * (bestRound[0]*10 + bestRound[1]*5);
         System.out.println("Your score is: " + score + "\n");
-        getScoreService().addScore(new Score(gameName, playerName, score, new Timestamp(System.currentTimeMillis())));
+        scoreService.addScore(new Score(gameName, playerName, score, new Timestamp(System.currentTimeMillis())));
 
         System.out.print("Do you wish to see also top players? [Y/N]\nYour decision: ");
         String input;
         do {
             input = scanner.nextLine().toUpperCase();
             if(Pattern.matches("Y", input)){
-                List<Score> playersScore = getScoreService().getTopScores(gameName);
+                List<Score> playersScore = scoreService.getTopScores(gameName);
                 System.out.println();
                 for (int i = 0; i < playersScore.size(); i++) {
                         System.out.println((i + 1) + ".Player: " + playersScore.get(i).getPlayer());
@@ -453,8 +420,7 @@ public class ConsoleUI {
         int[] bestRound = new int[2];
         int bestBlack = 0;
         int bestGrey = 0;
-        for (Hole[] round: game
-                .getHistory()){
+        for (Hole[] round: game.getHistory()){
             int black = 0;
             int grey = 0;
 

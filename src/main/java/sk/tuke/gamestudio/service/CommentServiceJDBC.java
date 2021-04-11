@@ -6,17 +6,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static sk.tuke.gamestudio.service.DatabaseLoginHandler.*;
+
 public class CommentServiceJDBC implements CommentService{
-    public static final String URL = "jdbc:postgresql://localhost/gamestudio";
-    public static final String USER = "postgres";
-    public static final String PASSWORD = "postgres";
     public static final String SELECT = "SELECT game, player, comment, commentedOn FROM comment WHERE game = ? ORDER BY player";
     public static final String DELETE = "DELETE FROM comment";
     public static final String INSERT = "INSERT INTO comment (game, player, comment, commentedOn) VALUES (?, ?, ?, ?)";
 
     @Override
     public void addComment(Comment comment) throws CommentException {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
              PreparedStatement statement = connection.prepareStatement(INSERT)
         ) {
             statement.setString(1, comment.getGame());
@@ -31,7 +30,7 @@ public class CommentServiceJDBC implements CommentService{
 
     @Override
     public List<Comment> getComments(String game) throws CommentException {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
             PreparedStatement statement = connection.prepareStatement(SELECT);
         ) {
             statement.setString(1, game);
@@ -49,7 +48,7 @@ public class CommentServiceJDBC implements CommentService{
 
     @Override
     public void reset() throws CommentException {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
              Statement statement = connection.createStatement();
         ) {
             statement.executeUpdate(DELETE);

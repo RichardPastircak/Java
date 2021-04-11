@@ -8,16 +8,13 @@ import java.util.List;
 
 
 public class ScoreServiceJDBC implements ScoreService {
-    public static final String URL = "jdbc:postgresql://localhost/gamestudio";
-    public static final String USER = "postgres";
-    public static final String PASSWORD = "postgres";
     public static final String SELECT = "SELECT game, player, points, playedOn FROM score WHERE game = ? ORDER BY points DESC LIMIT 10";
     public static final String DELETE = "DELETE FROM score";
     public static final String INSERT = "INSERT INTO score (game, player, points, playedOn) VALUES (?, ?, ?, ?)";
 
     @Override
     public void addScore(Score score) {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
              PreparedStatement statement = connection.prepareStatement(INSERT)
         ) {
             statement.setString(1, score.getGame());
@@ -32,7 +29,7 @@ public class ScoreServiceJDBC implements ScoreService {
 
     @Override
     public List<Score> getTopScores(String game) {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
              PreparedStatement statement = connection.prepareStatement(SELECT);
         ) {
             statement.setString(1, game);
@@ -50,7 +47,7 @@ public class ScoreServiceJDBC implements ScoreService {
 
     @Override
     public void reset() {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(DatabaseLoginHandler.getURL(), DatabaseLoginHandler.getUSER(), DatabaseLoginHandler.getPASSWORD());
              Statement statement = connection.createStatement();
         ) {
             statement.executeUpdate(DELETE);
