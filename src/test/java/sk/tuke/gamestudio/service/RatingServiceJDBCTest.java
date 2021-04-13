@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.test;
+package sk.tuke.gamestudio.service;
 
 import org.junit.jupiter.api.Test;
 import sk.tuke.gamestudio.service.RatingService;

@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.test;
+package sk.tuke.gamestudio.game.mastermind.core;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

@@ -42,7 +42,7 @@ public class ConsoleUI {
     @Autowired
     private ScoreService scoreService;
 
-    /*---------------------Constructor + G & S--------------------------------*/
+
     public ConsoleUI(Game game) {
         scanner = new Scanner(System.in);
         this.game = game;
@@ -51,9 +51,8 @@ public class ConsoleUI {
     /*--------------------------- PLAY + HANDLE + SHOW-------------------------------------------*/
     //Main game loop
     public void play(){
+        //load up player name
         gameIntroduction();
-
-        show(game.getCombination(), game.getNumOfHoles());
 
         //Game introduction
         System.out.println("\nI am thinking " + game.getNumOfHoles() + " color combination, none of those colors are same. The color combination is represented by pins which can be: " + ANSI_RED + "RED" + ANSI_RESET + ", " + ANSI_BLUE + "BLUE" + ANSI_RESET + ", " + ANSI_GREEN + "GREEN" + ANSI_RESET + ", " + ANSI_YELLOW + "YELLOW" + ANSI_RESET + ", " + ANSI_PURPLE + "PURPLE " + ANSI_RESET + "and " + ANSI_CYAN +  "CYAN" + ANSI_RESET + ".\n" +
@@ -208,6 +207,7 @@ public class ConsoleUI {
             print++;
         } while (!Pattern.matches("E", input) || emptyHoles != 0);
 
+        //just a fancy wait for user confirmation that he wants to continue
         if(game.getGameState() == GameState.PLAYING) {
             System.out.print(ANSI_GREY + "Press ENTER to continue" + ANSI_RESET);
             scanner.nextLine();
@@ -230,54 +230,18 @@ public class ConsoleUI {
 
     /* ---------------------------------------- HELP FUNCTIONS --------------------------------------------*/
 
-    //Loads player name + takes care of Admin + some default options for player
+    //Loads player name + some default options for player
     private void  gameIntroduction(){
         String input;
 
         //Load stuff from player
         System.out.println(ANSI_GREEN + "\nWELCOME TO MASTERMIND!" + ANSI_RESET);
         System.out.print("How shall I call you player?\n" +
-                 ANSI_RED + "Please don't use name 'O' or 'o' as that is reserved for some game functionality\n" +
-                "Also don't use name 'Admin' as it is reserved for superuser." +ANSI_RESET+ "\nInsert name: ");
+                 ANSI_RED + "Please don't use name 'O' or 'o' as that is reserved for some game functionality\n" + ANSI_RESET + "Insert name: ");
         playerName = scanner.nextLine();
         while (Pattern.matches("O|o", playerName)){
             System.out.print("Sorry this name is reserved because of some game functions. Try something else, please\nYour name: ");
             playerName = scanner.nextLine();
-        }
-
-        //admin authentification
-        if(Pattern.matches("Admin", playerName)){
-            for(int i = 0; i < 3; i++){
-                System.out.print("Insert superuser's password: ");
-                if(Pattern.matches("Admin", scanner.nextLine())) {
-                    System.out.println("Good to see you back boss. You still remember the delete options right?\n" +
-                            "[DC], [DR], [DS], [FD], [E]");
-
-                    String adminInput;
-                    do{
-                        System.out.print("Awaiting your orders: ");
-                        adminInput = scanner.nextLine().toUpperCase();
-                        if (Pattern.matches("DC", adminInput)) commentService.reset();
-                        else if (Pattern.matches("DR",adminInput)) ratingService.reset();
-                        else if (Pattern.matches("DS",adminInput)) scoreService.reset();
-                        else if (Pattern.matches("FD",adminInput)) {
-                            commentService.reset();
-                            ratingService.reset();
-                            scoreService.reset();
-                        }
-                        else if (!Pattern.matches("E",adminInput)) {
-                            System.out.println("Seems you misspelled boss");
-                        }
-                    }while (!Pattern.matches("E", adminInput));
-                    break;
-                }
-
-                if(i == 2){
-                    System.err.print("Unauthorized access. Shuting down the system");
-                    System.exit(-1);
-                }
-                System.out.println("Wrong password");
-            }
         }
 
         System.out.println("\nHello " + ANSI_BLUE +playerName + ANSI_RESET + "!");
@@ -333,6 +297,7 @@ public class ConsoleUI {
         System.out.println("Thank you for your contribution.");
     }
 
+    //prints comments from database
     private void showComments(){
         List<Comment> comments = commentService.getComments(gameName);
         if(comments.size() == 0){
@@ -359,6 +324,7 @@ public class ConsoleUI {
         System.out.println("Thank you for your rating!");
     }
 
+    //shows avg rating of game
     private void showAverageRating (){
         int rating = ratingService.getAverageRating(gameName);
 
@@ -366,8 +332,8 @@ public class ConsoleUI {
         else System.out.println("The average rating of game is " + rating);
     }
 
+    //shows player rating
     private void playerRating(){
-        String input;
         int friendRating;
         String friendName;
 
@@ -416,6 +382,7 @@ public class ConsoleUI {
     }
 
     /*-------------------------------- DATABASE HELP FUNCTIONS -------------------------------------*/
+    //helps with generating score by founding the round that has the most black and then most grey pins in evaluation
     private int[] findBestRound(){
         int[] bestRound = new int[2];
         int bestBlack = 0;

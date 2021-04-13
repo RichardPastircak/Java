@@ -1,6 +1,11 @@
-package sk.tuke.gamestudio.test;
+package sk.tuke.gamestudio.game.mastermind;
 
 import org.junit.jupiter.api.Test;
+import sk.tuke.gamestudio.game.mastermind.core.GameTest;
+import sk.tuke.gamestudio.game.mastermind.core.HoleTest;
+import sk.tuke.gamestudio.service.CommentServiceJDBCTest;
+import sk.tuke.gamestudio.service.RatingServiceJDBCTest;
+import sk.tuke.gamestudio.service.ScoreServiceJDBCTest;
 
 public class MainTest {
 
