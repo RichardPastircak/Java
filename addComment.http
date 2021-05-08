@@ -2,8 +2,8 @@ POST http://localhost:8080/api/comment
 Content-Type: application/json
 
 {
-"comment": "test",
-"commentedOn": "2016-06-22T18:00:00.000",
+"comment": "odovzdavka",
+"commentedOn": "2016-06-22T18:00:00.000+02:00",
 "game": "Mastermind",
 "player": "test_http1"
 }

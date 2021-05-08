@@ -383,7 +383,7 @@ public class ConsoleUI {
 
     /*-------------------------------- DATABASE HELP FUNCTIONS -------------------------------------*/
     //helps with generating score by founding the round that has the most black and then most grey pins in evaluation
-    private int[] findBestRound(){
+    public int[] findBestRound(){
         int[] bestRound = new int[2];
         int bestBlack = 0;
         int bestGrey = 0;

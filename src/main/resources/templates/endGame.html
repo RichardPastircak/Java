@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mastermind-EndGame</title>
+    <link href="/css/stuff.css" rel="stylesheet" media="screen">
+</head>
+<body id="endgame-body">
+    <h1 th:if="${@mastermindController.gameState}">Congrats! You Won!</h1>
+    <h1 th:if="not ${@mastermindController.gameState}">You Lost!</h1>
+
+    <h2 th:text="${@mastermindController.score}"></h2>
+
+    <div id="correct_combiantion">
+        <p>Correct combinations was: </p>
+        <div id="combation" th:utext="${@mastermindController.combination}"></div>
+    </div>
+    <a href="/mastermind/new">New Game</a>
+
+    <hr>
+    <div id="isLogged" th:if="${@mastermindController.logged}">
+        <form id="form-rating" action="/mastermind/rating">
+            <label for="playerRating">Your rating:</label>
+            <input id="playerRating" type="text" size="20" name="endRating" maxlength="30" placeholder="number 1 - 10">
+            <button type="submit">Rate</button>
+        </form>
+        <form id="form-comment" action="/mastermind/comment">
+            <label for="playerComment">Your comment:</label>
+            <textarea id="playerComment"  name="endComment" placeholder="Insert your comment here."></textarea>
+            <button id="comment_button" type="submit">Comment</button>
+        </form>
+    </div>
+    <hr th:if="${@mastermindController.logged}">
+
+    <span id="dbs">
+        <ul>
+            <h3>Scores:</h3>
+            <li th:each="score : ${scores}">
+                <div th:text="'Player: ' + ${score.player} + ', Score: ' + ${score.points}"></div>
+            </li>
+
+        </ul>
+
+        <div th:text="'Average rating of game is: ' + ${avgRating}"></div>
+
+        <ul>
+            <h3>Comments:</h3>
+            <li th:each="comment : ${comments}">
+                <div th:text="'Player: ' + ${comment.player} + ', Comment: ' + ${comment.comment}"></div>
+            </li>
+
+        </ul>
+    </span>
+
+</body>
+</html>

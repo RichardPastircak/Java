@@ -21,7 +21,6 @@ import sk.tuke.gamestudio.service.*;
 public class SpringClient {
 
     public static void main(String[] args) {
-       // SpringApplication.run(SpringClient.class, args);
         new SpringApplicationBuilder(SpringClient.class).web(WebApplicationType.NONE).run(args);
     }
 

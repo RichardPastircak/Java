@@ -4,6 +4,6 @@ Content-Type: application/json
 {
   "game": "Mastermind",
   "player": "test_http1",
-  "ratedOn": "2016-06-22T18:00:00.000",
+  "ratedOn": "2016-06-22T18:00:00.000+02:00",
   "rating": "5"
 }

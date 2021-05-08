@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "game": "Mastermind",
-  "playedOn": "2016-06-22T18:00:00.000",
+  "playedOn": "2016-06-22T18:00:00.000+02:00",
   "player": "test",
-  "points": "100"
+  "points": "2000"
 }

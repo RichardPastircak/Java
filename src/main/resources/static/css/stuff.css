@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Times New Roman", Times, serif;
+    background-color: #a9a5a5;
+    /*border:solid black;*/
+}
+
+input, textarea, button {
+    background-color: white;
+    border: black solid 2px;
+    padding: 0.25%;
+    margin-top: 0.5%;
+}
+
+h1 {
+    text-align: center;
+}
+
+h2{
+    text-align: center;
+    margin-top: 2.5%;
+ }
+
+body > a{
+    width: 100%;
+    text-align: center;
+    margin-top: 1%;
+}
+
+hr {
+    border: 3px black solid;
+    margin-top: 2.5%;
+}
+
+p{
+    margin-right: 1%;
+    margin-top: 0.5%;
+}
+
+#index-body, #thymeleaf-body, #endgame-body {
+    display: grid;
+    grid-template-columns: 10% auto 10%;
+}
+
+#index-body > main {
+    grid-column-start: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-top: 20%;
+}
+
+#thymeleaf-body > *, #endgame-body > * {
+    grid-column-start: 2;
+}
+
+#endgame-body > a{
+    margin-top: 1%;
+}
+
+#form{
+    width: 15%;
+}
+
+#form>button{
+    margin-left: 40%;
+    width: 20%;
+    margin-bottom: 2%;
+}
+
+/************************************FORMS************************************/
+
+#isLogged{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1%;
+}
+
+#isLogged > form {
+    width: 25%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#endgame-body > #isLogged > form > button{
+    height: 50%;
+}
+
+#dbs{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 1%;
+    margin-top: 1%;
+}
+
+/***************************************FIELD************************************/
+#thymeleaf-field {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#thymeleaf-field > div, #thymeleaf-field > a, #history > div > div, #combation > div{
+    border: solid black 2px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+
+    margin-top: 2.5%;
+}
+
+#history > div, #combation{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 2.5%;
+}
+
+#combation {
+    margin-top: 0;
+}
+
+#correct_combiantion{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 1%;
+}
+
+#history > div > div{
+    margin: 0;
+}
+
+.space{
+    visibility: hidden;
+}
+
+.empty {
+    background-color: white;
+}
+
+.red {
+    background-color: red;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.green {
+    background-color: green;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.purple {
+    background-color: purple;
+}
+
+.cyan {
+    background-color: cyan;
+}
+
+.black {
+    background-color: black;
+}
+
+.grey {
+    background-color: gray;
+}
