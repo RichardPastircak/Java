@@ -87,7 +87,7 @@ p{
     justify-content: space-evenly;
 }
 
-#endgame-body > #isLogged > form > button{
+#comment_button{
     height: 50%;
 }
 
