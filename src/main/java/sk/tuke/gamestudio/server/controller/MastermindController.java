@@ -190,7 +190,7 @@ public class MastermindController {
     public String getHistory(){
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < game.getNumOfRounds(); i++){
+        for (int i = 0; i < game.getNumOfRounds()-1; i++){
             sb.append("<div>");
             for(int j = 0; j < game.getNumOfHistoryHoles(); j++) {
                 sb.append("<div class='" + game.getHistory()[i][j].getColor().toString().toLowerCase(Locale.ROOT) + "'></div>");
@@ -254,7 +254,7 @@ public class MastermindController {
     }
 
     public String getRound(){
-        return ("Round: " + round);
+        return ("Round: " + (round+1));
     }
 
     public boolean isGameState() {

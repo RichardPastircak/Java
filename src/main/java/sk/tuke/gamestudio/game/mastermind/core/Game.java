@@ -15,7 +15,7 @@ public class Game {
     private Hole[][] history;
 
     public Game() {
-        currentRound = 1;
+        currentRound = 0;
         numOfRounds = 9;
         numOfHoles = 4;
         numOfHistoryHoles = 2*numOfHoles;
