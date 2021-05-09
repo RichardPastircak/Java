@@ -42,7 +42,7 @@
         <form id="form-comment" action="/mastermind/comment">
             <label for="playerComment">Your comment:</label>
             <textarea id="playerComment"  name="thmlfComment" placeholder="Insert your comment here."></textarea>
-            <button type="submit">Comment</button>
+            <button type="submit" id="comment_button">Comment</button>
         </form>
     </div>
     <hr th:if="${@mastermindController.logged}">
