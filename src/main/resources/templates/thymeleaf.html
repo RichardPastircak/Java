@@ -9,6 +9,13 @@
 <body id="thymeleaf-body">
     <h1>Mastermind</h1>
 
+    <p>The goal of the game is simple. You have to guess the 4 color Combination. By clicking on one of the left upper 4 circles, their color will
+        alternate between red, blue, green, yellow, purple and cyan. When you fill all of the circles with colors click on "Evaluate" below. Your guess
+        will be evaluated with black color for correctly guessed color and also position, with grey color if you guesses only the color right and
+        white if you guessed none of those right. Please keep in mind that the order of black, grey and white colors has nothing in common with the
+        position of colors in your guess as the black colors will always be showed first, the grey colors second and white colors last. You have
+        9 rounds to guess the Combination. Good Luck and Have Fun!</p>
+
     <!--<div id="correct_combiantion">
         <p>Correct combinations was: </p>
         <div id="combation" th:utext="${@mastermindController.combination}"></div>
