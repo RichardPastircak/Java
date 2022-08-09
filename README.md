@@ -8,7 +8,6 @@ Najprv sa jednalo len o konzolovú záležitosť bez akéhoľvek využitia datab
 -Link na video o konzolovej verzií: https://youtu.be/Wjaz7XyW8r0
 
 -Link na video o konzolovej verzií s databázami : https://youtu.be/jE_6KvnqqP8
-
 -Link na video o verzií vo webovom rozhraní: https://youtu.be/6ejmiRkkAIc
 
 
