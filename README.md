@@ -1,4 +1,4 @@
-<h1>Programovanie hry Logik (Mastermind) v jazyku java s využitim SpringBootu,JPA,PostgreSQL</h1>
+<h1>Programovanie hry Logik (Mastermind) v jazyku Java s využitim SpringBootu,JPA,PostgreSQL</h1>
 Cieľom hry je uhádnuť farebnú kombináciu pozostávajúcu zo štyroch farieb, ktorú si zvolil počítač. Pri každom našom pokuse sme ohodnotení koľko farieb sme z jeho kombinácie uhádli a taktiež koľko z nich je na tej istej pozícií ako si on zvolil. 
 
 <h2>Hra sa programovala v niekoľkých štádiach</h2> 
